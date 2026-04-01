@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Cos</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Cos</h1>
+
+    <p th:if="${success}"
+       th:text="${success}"
+       class="success">
+    </p>
+
+    <table>
+        <tr>
+            <th>Titlu</th>
+            <th>Data</th>
+            <th>Actiuni</th>
+        </tr>
+
+        <tr th:each="e : ${trashEvents}">
+            <td th:text="${e.title}"></td>
+            <td th:text="${e.dateTime}"></td>
+            <td>
+                <a th:href="@{/events/{id}/restore(id=${e.id})}">Restaurare</a>
+                |
+                <a th:href="@{/events/{id}/deletePermanent(id=${e.id})}"
+                   onclick="return confirm('Sigur stergi definitiv?')">
+                    Stergere definitiva
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <div class="nav" style="margin-top: 20px;">
+        <a th:href="@{/events}">Inapoi</a>
+    </div>
+
+</div>
+
+</body>
+</html>

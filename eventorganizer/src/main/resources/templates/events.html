@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Evenimente</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Lista evenimentelor</h1>
+
+    <p th:if="${success}" th:text="${success}" class="success"></p>
+
+    <div class="toolbar">
+
+        <form th:action="@{/events}" method="get" class="toolbar-form">
+
+            <select name="category">
+                <option value="" th:selected="${selectedCategory == ''}">TOATE</option>
+                <option th:each="c : ${T(ro.upb.awj.eventorganizer.model.EventCategory).values()}"
+                        th:value="${c}"
+                        th:text="${c}"
+                        th:selected="${selectedCategory == c.name()}">
+                </option>
+            </select>
+
+            <select name="range">
+                <option value="" th:selected="${selectedRange == ''}">Oricând</option>
+                <option value="7" th:selected="${selectedRange == '7'}">Următoarele 7 zile</option>
+                <option value="30" th:selected="${selectedRange == '30'}">Următoarea lună</option>
+                <option value="365" th:selected="${selectedRange == '365'}">Următorul an</option>
+            </select>
+
+            <select name="order">
+                <option value="asc" th:selected="${order == 'asc'}">Dată ↑</option>
+                <option value="desc" th:selected="${order == 'desc'}">Dată ↓</option>
+            </select>
+
+            <button type="submit">Aplica</button>
+        </form>
+
+    </div>
+
+    <table>
+        <tr>
+            <th>Titlu</th>
+            <th>Data</th>
+            <th>Status</th>
+            <th>Progres</th>
+            <th>Acțiuni</th>
+        </tr>
+
+        <tr th:each="e : ${events}">
+            <td>
+                <a th:href="@{/events/{id}(id=${e.id})}" th:text="${e.title}"></a>
+            </td>
+            <td th:text="${e.dateTime}"></td>
+            <td th:text="${e.status}"></td>
+            <td th:text="${e.progress + '%'}"></td>
+            <td>
+                <a th:href="@{/events/{id}/edit(id=${e.id})}">Editează</a>
+                |
+                <a th:href="@{/events/{id}/delete(id=${e.id})}"
+                   onclick="return confirm('Sigur doriți ștergerea?')">
+                    Șterge
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <div class="nav" style="margin-top:25px; margin-bottom:10px; display:flex; justify-content:space-between;">
+    <a th:href="@{/events/new}">Adauga eveniment</a>
+    <a th:href="@{/events/trash}">Coș</a>
+	</div>
+
+    <p class="stats">
+        Afișate acum: <b th:text="${shownCount}"></b>
+    </p>
+
+    <p class="stats">
+        Statistici globale:
+        Total: <span th:text="${totalCount}"></span> |
+        Viitoare: <span th:text="${futureCount}"></span> |
+        În desfășurare: <span th:text="${inProgressCount}"></span> |
+        Finalizate: <span th:text="${finishedCount}"></span> |
+        Importante: <span th:text="${importantCount}"></span>
+    </p>
+
+</div>
+
+</body>
+</html>

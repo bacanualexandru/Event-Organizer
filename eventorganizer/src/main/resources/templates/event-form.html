@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="${event.id} == null ? 'Adauga eveniment' : 'Editeaza eveniment'"></title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1 th:text="*{id} == null ? 'Eveniment nou' : 'Editeaza eveniment'"></h1>
+
+    <form th:object="${event}"
+          th:action="${event.id} == null ? @{/events} : @{/events/{id}(id=${event.id})}"
+          method="post">
+
+        <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{status}"/>
+
+        <label>
+            Titlu:
+            <input type="text" th:field="*{title}"/>
+        </label>
+        <span th:errors="*{title}" class="error"></span>
+
+        <label>
+            Descriere:
+            <input type="text" th:field="*{description}"/>
+        </label>
+
+        <label>
+            Data:
+            <input type="datetime-local"
+                   th:field="*{dateTime}"
+                   th:value="${event.dateTime != null ? #temporals.format(event.dateTime, 'yyyy-MM-dd''T''HH:mm') : ''}"/>
+        </label>
+        <span th:errors="*{dateTime}" class="error"></span>
+
+        <label>
+            Locatie:
+            <input type="text" th:field="*{location}"/>
+        </label>
+        <span th:errors="*{location}" class="error"></span>
+
+        <label>
+            Categoria:
+            <select th:field="*{category}">
+                <option th:each="c : ${categories}"
+                        th:value="${c}"
+                        th:text="${c}">
+                </option>
+            </select>
+        </label>
+
+        <div style="margin-top: 15px;">
+            <label>
+                Important:
+                <input type="checkbox" th:field="*{important}"/>
+            </label>
+        </div>
+
+        <div style="margin-top: 25px;">
+            <button type="submit"
+                    th:text="*{id} == null ? 'Salveaza' : 'Actualizeaza'">
+            </button>
+        </div>
+    </form>
+
+    <div class="nav" style="margin-top: 20px;">
+        <a th:href="@{/events}">Inapoi</a>
+    </div>
+
+</div>
+
+</body>
+</html>

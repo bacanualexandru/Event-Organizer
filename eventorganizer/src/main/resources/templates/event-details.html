@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Detalii eveniment</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1 th:text="${event.title}"></h1>
+
+    <p><b>Descriere:</b> <span th:text="${event.description}"></span></p>
+    <p><b>Data:</b> <span th:text="${event.dateTime}"></span></p>
+    <p><b>Locatie:</b> <span th:text="${event.location}"></span></p>
+    <p><b>Status:</b> <span th:text="${event.status}"></span></p>
+    <p><b>Categorie:</b> <span th:text="${event.category}"></span></p>
+    <p>
+        <b>Important:</b>
+        <span th:text="${event.important ? 'Da' : 'Nu'}"></span>
+    </p>
+
+    <p><b>Progres:</b> <span th:text="${event.progress + '%'}"></span></p>
+
+    <hr/>
+
+    <h2>Taskuri</h2>
+
+    <table>
+        <tr>
+            <th>Îndeplinit</th>
+            <th>Titlu</th>
+            <th>Prioritate</th>
+            <th>Actiuni</th>
+        </tr>
+        <tr th:each="t : ${event.tasks}">
+            <td th:text="${t.done ? 'Da' : 'Nu'}"></td>
+            <td th:text="${t.title}"></td>
+            <td th:text="${t.priority == T(ro.upb.awj.eventorganizer.model.TaskPriority).LOW ? 'Scazuta' :
+                          t.priority == T(ro.upb.awj.eventorganizer.model.TaskPriority).MEDIUM ? 'Medie' :
+                          t.priority == T(ro.upb.awj.eventorganizer.model.TaskPriority).HIGH ? 'Ridicata' : '-'}">
+            </td>
+            <td>
+                <a th:href="@{/tasks/{id}/toggle(id=${t.id}, eventId=${event.id})}">O</a>
+                |
+                <a th:href="@{/tasks/{id}/delete(id=${t.id}, eventId=${event.id})}"
+                   onclick="return confirm('Sigur stergi task-ul?')">
+                    Sterge
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <hr/>
+
+    <h3>Adauga task</h3>
+
+    <form th:action="@{/events/{id}/tasks(id=${event.id})}"
+          th:object="${task}"
+          method="post">
+
+        Titlu:
+        <input type="text" th:field="*{title}"/>
+        <span th:errors="*{title}"></span><br/>
+
+        Descriere:
+        <input type="text" th:field="*{description}"/><br/>
+
+        Prioritate:
+        <select th:field="*{priority}">
+            <option th:each="p : ${priorities}"
+                    th:value="${p}"
+                    th:text="${p == T(ro.upb.awj.eventorganizer.model.TaskPriority).LOW ? 'Scazuta' :
+                              p == T(ro.upb.awj.eventorganizer.model.TaskPriority).MEDIUM ? 'Medie' :
+                              p == T(ro.upb.awj.eventorganizer.model.TaskPriority).HIGH ? 'Ridicata' : p}">
+            </option>
+        </select><br/>
+
+        <button type="submit">Adauga</button>
+    </form>
+	<a href="/events">Inapoi</a>
+
+</div>
+
+</body>
+</html>
